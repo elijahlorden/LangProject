@@ -44,7 +44,18 @@ public class Lexer {
 		return null;
 	}
 	
-	
+	public String getTokenType(String token) {
+		if (token.matches("\\w*\\((\\w*)\\)")) {
+			return "routineparams";
+		} else if (token.equals("{")) {
+			return "blockopen";
+		} else if (token.equals("}")) {
+			return "blockclose";
+		} else if (token.matches("")) {
+			return "expression";
+		}
+		return "keyword";
+	}
 	
 	
 	
