@@ -1,13 +1,14 @@
-package Main;
+package main;
+
+import java.io.IOException;
+
+import assembler.Assembler;
 
 public class Main {
-	public static void main(String[] args) {
-		Lexer test = new Lexer("routine main(2) { }");
-		while (true) {
-			String next = test.nextToken();
-			if (next == null) break;
-			System.out.println(next);
-		}
-		
+
+	public static void main(String[] args) throws IOException {
+		Assembler asm = new Assembler(Util.readFile("./Program.asm"));
+		asm.lex();
 	}
+
 }

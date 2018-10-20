@@ -1,0 +1,13 @@
+package assembler;
+
+@SuppressWarnings("serial")
+public class AssemblerException extends RuntimeException {
+
+	public AssemblerException(String reason) {
+		super(reason);
+	}
+    @Override
+    public Throwable fillInStackTrace() {
+        return this;
+    }
+}
