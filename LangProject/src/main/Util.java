@@ -38,5 +38,11 @@ public class Util {
 		System.exit(0);
 	}
 	
+	public static void printArray(Object[] array) {
+		for (int i=0;i<array.length;i++) {
+			System.out.println(array[i]);
+		}
+	}
+	
 	
 }

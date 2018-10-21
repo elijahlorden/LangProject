@@ -1,0 +1,13 @@
+.data
+byte: ._byte 256
+#word: .word 1024
+#sword: .sword 2048
+#string: .ascii "Hello World" #strings are treated as byte arrays
+#charArray: .byte 'H','e','l','l','o'
+#byteArray: .byte 1,2,3,4,5
+#block: .block 16 #allocate 16 bytes initialized to 0
+
+.text
+
+ldi r0 1 #comment6
+mov r1 r0
