@@ -19,15 +19,19 @@ public class Assembler {
 			if (line.length() < 1 || line.charAt(0) == '#') continue;
 			line = removeComments(line);
 			if (line.length() < 1 || line.charAt(0) == '#') continue;
-			switch(line) {
+			String[] lines = line.split("\\s+");
+			switch(lines[0]) {
 				case ".data": 
 					section = 1;
 					break;
 				case ".text":
 					section = 2;
 					break;
-				case ".global":
+				case ".import":
 					section = 3;
+					break;
+				case ".export":
+					section = 4;
 					break;
 				default:
 					switch(section) {
@@ -38,6 +42,10 @@ public class Assembler {
 							lexDataLine(line, i+1);
 							break;
 						case 2:
+							break;
+						case 3:
+							break;
+						case 4:
 							break;
 						default:
 							Util.error("Assembler", "Unknown error", i+1);

@@ -5,7 +5,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Util {
@@ -38,11 +40,22 @@ public class Util {
 		System.exit(0);
 	}
 	
-	public static void printArray(Object[] array) {
+	public static void printArray(byte[] array) {
 		for (int i=0;i<array.length;i++) {
 			System.out.println(array[i]);
 		}
 	}
+	
+	public static byte[] concatArrays(byte[] arr1, byte[] arr2) {
+		byte[] res = Arrays.copyOf(arr1, arr1.length + arr2.length);
+		System.arraycopy(arr2, 0, res, arr1.length, arr2.length);
+		return res;
+	}
+	
+	
+	
+	
+	
 	
 	
 }

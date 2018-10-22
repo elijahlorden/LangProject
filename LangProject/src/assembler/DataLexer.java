@@ -12,10 +12,9 @@ public class DataLexer {
 		}
 		switch(type) {
 		case "byte":
-			rawData =  getByte(data, unsigned, ln);
 		case "word":
-			break;
 		case "sword":
+			rawData =  getNumericData(data, type, unsigned, ln);
 			break;
 		case "ascii":
 			if (unsigned) Util.error("Assembler", "Type 'ascii' cannot be declared as unisgned", ln);
@@ -30,18 +29,20 @@ public class DataLexer {
 			Util.error("Assembler", "Unknown data type '" + type + "'", ln);
 			break;
 		}
+		//System.out.println();
+		//Util.printArray(rawData);
 		return rawData;
 	}
 	
-	private static byte parseByte(String data, int ln, boolean unsigned) { //1-byte values
+	private static byte[] parseByte(String data, int ln, boolean unsigned) { //1-byte values
 		if (data.charAt(0) == '\'') {
 			if (data.charAt(data.length()-1) != '\'' || data.length() > 3) Util.error("Assembler", "Malformed character", ln);
-			return (byte) data.charAt(1);
+			return new byte[] {(byte) data.charAt(1)};
 		}
 		if (unsigned) {
-			return (byte) (Integer.parseInt(data) & 0xFF);
+			return new byte[] {(byte) (Integer.parseInt(data) & 0xFF)};
 		} else {
-			return Byte.parseByte(data);
+			return new byte[] {Byte.parseByte(data)};
 		}
 	}
 	
@@ -52,34 +53,51 @@ public class DataLexer {
 		} else {
 			n = Short.parseShort(data);
 		}
-		return new byte[] {(byte) (n & 0xFF00), (byte) (n & 0x00FF)};
+		return new byte[] {(byte) ((n>>>8) & 0xFF), (byte) (n & 0x00FF)};
 	}
 	
 	public static byte[] parseSWord(String data, int ln, boolean unsigned) { //3-byte values
 		if (unsigned) {
 			Integer n = Integer.parseUnsignedInt(data);
-			return new byte[] {(byte) (n & 0xFF0000), (byte) (n & 0x00FF00), (byte) (n & 0x0000FF)};
+			return new byte[] {(byte) ((n>>>12) & 0xFF), (byte) ((n>>>8) & 0xFF), (byte) (n & 0xFF)};
 		} else {
 			Integer n = Integer.parseInt(data);
-			n = n << 23; //Arithmatic left shift to join the sword with the sign bit
-			n = n >>> 23; //Logical right shift to fix the position of the sword
-			return new byte[] {(byte) (n & 0xFF0000), (byte) (n & 0x00FF00), (byte) (n & 0x0000FF)};
+			n = n << 9; //Arithmatic left shift to join the sword with the sign bit
+			n = n >>> 9; //Logical right shift to fix the position of the sword
+			return new byte[] {(byte) ((n>>>12) & 0xFF), (byte) ((n>>>8) & 0xFF), (byte) (n & 0xFF)};
 		}
 	}
 	
-	private static byte[] getByte(String data, boolean unsigned, int ln) {
-		byte[] out = null;
+//	public static byte[] parseBlock(String data, int ln, boolean unsigned) {
+//		int len = Integer.parseInt(data);
+//	}
+	
+	private static byte[] parseType(String type, String data, int ln, boolean unsigned) {
+		switch(type) {
+			case "byte":
+				return parseByte(data, ln, unsigned);
+			case "word":
+				return parseWord(data, ln, unsigned);
+			case "sword":
+				return parseSWord(data, ln, unsigned);
+			default:
+				Util.error("Assembler", "Unknown type" + type, ln);
+				return null;
+		}
+	}
+	
+	private static byte[] getNumericData(String data, String type, boolean unsigned, int ln) {
+		byte[] out = new byte[0];
 		try {
 			if (data.indexOf(',') != -1) {
 				String[] parts = data.split(",");
-				out = new byte[parts.length];
-				for (int i=0;i<parts.length;i++) out[i] = parseByte(parts[i], ln, unsigned);
+				for (int i=0;i<parts.length;i++) out = Util.concatArrays(out, parseType(type, parts[i], ln, unsigned));
 			} else {
-				out = new byte[] {parseByte(data, ln, unsigned)};
+				out = parseType(type, data, ln, unsigned);
 			}
 			
 		} catch (NumberFormatException e) {
-			Util.error("Assembler", "Malformed byte", ln);
+			Util.error("Assembler", "Malformed data", ln);
 		}
 		return out;
 	}
