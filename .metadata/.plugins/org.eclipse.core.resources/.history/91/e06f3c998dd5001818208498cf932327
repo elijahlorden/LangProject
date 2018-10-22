@@ -1,0 +1,19 @@
+package main;
+
+import java.io.IOException;
+
+import assembler.Assembler;
+import assembler.containers.Reloc;
+
+public class Main {
+	
+	public static void main(String[] args) throws IOException {
+		
+		Reloc test = new Reloc(0, "test", "sym");
+		System.out.println(test);
+		
+		Assembler asm = new Assembler(Util.readFile("./Program.asm"));
+		asm.lex();
+	}
+
+}

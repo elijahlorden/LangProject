@@ -3,16 +3,14 @@ package assembler;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import assembler.containers.ObjectChunk;
 import main.Util;
 
 public class Assembler {
 	private ArrayList<String> rawLines;
 	
-	private ArrayList<ObjectChunk> chunks; //Holds all locally defined chunks
-	
 	public Assembler(ArrayList<String> rawLines) {
 		this.rawLines = rawLines;
-		this.chunks = new ArrayList<ObjectChunk>();
 	}
 	public void lex() {
 		byte section = 0;
@@ -86,7 +84,7 @@ public class Assembler {
 		}
 		byte[] data = DataLexer.translateData(ds, type, ln);
 		ObjectChunk dataChunk = new ObjectChunk(key, data);
-		chunks.add(dataChunk);
+		
 	}
 	
 	

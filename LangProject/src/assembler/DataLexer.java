@@ -33,7 +33,7 @@ public class DataLexer {
 		return rawData;
 	}
 	
-	private static byte parseByte(String data, int ln, boolean unsigned) {
+	private static byte parseByte(String data, int ln, boolean unsigned) { //1-byte values
 		if (data.charAt(0) == '\'') {
 			if (data.charAt(data.length()-1) != '\'' || data.length() > 3) Util.error("Assembler", "Malformed character", ln);
 			return (byte) data.charAt(1);
@@ -42,6 +42,28 @@ public class DataLexer {
 			return (byte) (Integer.parseInt(data) & 0xFF);
 		} else {
 			return Byte.parseByte(data);
+		}
+	}
+	
+	private static byte[] parseWord(String data, int ln, boolean unsigned) { //2-byte values
+		Short n;
+		if (unsigned) {
+			n = (short) (Integer.parseInt(data) & 0xFFFF);
+		} else {
+			n = Short.parseShort(data);
+		}
+		return new byte[] {(byte) (n & 0xFF00), (byte) (n & 0x00FF)};
+	}
+	
+	public static byte[] parseSWord(String data, int ln, boolean unsigned) { //3-byte values
+		if (unsigned) {
+			Integer n = Integer.parseUnsignedInt(data);
+			return new byte[] {(byte) (n & 0xFF0000), (byte) (n & 0x00FF00), (byte) (n & 0x0000FF)};
+		} else {
+			Integer n = Integer.parseInt(data);
+			n = n << 23; //Arithmatic left shift to join the sword with the sign bit
+			n = n >>> 23; //Logical right shift to fix the position of the sword
+			return new byte[] {(byte) (n & 0xFF0000), (byte) (n & 0x00FF00), (byte) (n & 0x0000FF)};
 		}
 	}
 	
@@ -61,4 +83,12 @@ public class DataLexer {
 		}
 		return out;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
 }
