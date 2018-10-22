@@ -7,15 +7,16 @@ import assembler.containers.ASMObject;
 import assembler.containers.ObjectChunk;
 import main.Util;
 
+/***
+ * 
+ * @author elilo
+ *
+ */
 public class Assembler {
 	private ArrayList<String> rawLines;
 	private String filename;
 	private ASMObject obj;
 	
-	/***
-	 * Creates a new Assembler object
-	 * @param filename
-	 */
 	public Assembler(String filename) {
 		try {
 			this.rawLines = Util.readFile(filename);
@@ -29,9 +30,8 @@ public class Assembler {
 	private void log(String s) {
 		System.out.println("[Assembler] (" + filename + ") " + s);
 	}
-	 /***
-	  * Lex the input file into discrete chunks
-	  */
+	
+	
 	public void lex() {
 		log("Start Lex");
 		byte section = 0;
@@ -78,12 +78,6 @@ public class Assembler {
 		log("Lex completed");
 	}
 	
-	/***
-	 * Removes comments from the input string
-	 * Comments are declared by prefixing them with '#'
-	 * @param s The string to be cleared of comments
-	 * @return  The input with comments removed
-	 */
 	private String removeComments(String s) {
 		int index = s.indexOf('#');
 		if (index != 0) {
@@ -101,11 +95,6 @@ public class Assembler {
 		return s.substring(0,index);
 	}
 	
-	/***
-	 * Lexes a line from the .data section
-	 * @param line the line to be lexed
-	 * @param ln the current line number
-	 */
 	private void lexDataLine(String line, int ln) {
 		String[] parts = line.split("\\s+");
 		if (parts.length < 3) Util.error("Assembler", "Invalid data declaration", ln);

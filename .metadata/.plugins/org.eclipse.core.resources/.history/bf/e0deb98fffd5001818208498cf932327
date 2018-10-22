@@ -1,39 +1,27 @@
 package assembler;
 
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
-import assembler.containers.ASMObject;
 import assembler.containers.ObjectChunk;
 import main.Util;
 
 public class Assembler {
 	private ArrayList<String> rawLines;
 	private String filename;
-	private ASMObject obj;
 	
-	/***
-	 * Creates a new Assembler object
-	 * @param filename
-	 */
-	public Assembler(String filename) {
-		try {
-			this.rawLines = Util.readFile(filename);
-		} catch (IOException e) {
-			Util.error("Assembler", "Could not read file " + filename);
-		}
+	public Assembler(ArrayList<String> rawLines, String filename) {
+		this.rawLines = rawLines;
 		this.filename = filename;
-		this.obj = new ASMObject();
 	}
 	
 	private void log(String s) {
 		System.out.println("[Assembler] (" + filename + ") " + s);
 	}
-	 /***
-	  * Lex the input file into discrete chunks
-	  */
+	
+	
 	public void lex() {
-		log("Start Lex");
+		log("Start Lexer");
 		byte section = 0;
 		for (int i=0; i<rawLines.size(); i++) {
 			String line = rawLines.get(i);
@@ -75,15 +63,8 @@ public class Assembler {
 					break;
 			}
 		}
-		log("Lex completed");
 	}
 	
-	/***
-	 * Removes comments from the input string
-	 * Comments are declared by prefixing them with '#'
-	 * @param s The string to be cleared of comments
-	 * @return  The input with comments removed
-	 */
 	private String removeComments(String s) {
 		int index = s.indexOf('#');
 		if (index != 0) {
@@ -101,11 +82,6 @@ public class Assembler {
 		return s.substring(0,index);
 	}
 	
-	/***
-	 * Lexes a line from the .data section
-	 * @param line the line to be lexed
-	 * @param ln the current line number
-	 */
 	private void lexDataLine(String line, int ln) {
 		String[] parts = line.split("\\s+");
 		if (parts.length < 3) Util.error("Assembler", "Invalid data declaration", ln);
@@ -125,7 +101,7 @@ public class Assembler {
 		}
 		byte[] data = DataLexer.translateData(ds, type, ln);
 		ObjectChunk dataChunk = new ObjectChunk(key, data);
-		obj.addChunk(dataChunk);
+		
 	}
 	
 	

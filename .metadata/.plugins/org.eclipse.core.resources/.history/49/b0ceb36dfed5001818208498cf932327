@@ -9,7 +9,7 @@ string1: .ascii "Hello World" #ascii is not terminated
 string2: .asciiz "Hello World" #asciiz is terminated with a null character
 charArray: .byte 'H','e','l','l','o'
 byteArray: .byte 1,2,3,4,5
-block: .block 10 #allocate 16 bytes initialized to 0
+block: .block 1g #allocate 16 bytes initialized to 0
 
 .text #code
 
