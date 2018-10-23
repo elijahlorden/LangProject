@@ -1,0 +1,19 @@
+package main;
+
+import java.io.IOException;
+import java.util.BitSet;
+
+import assembler.Assembler;
+import assembler.DataLexer;
+
+public class Main {
+	
+	
+	
+	public static void main(String[] args) throws IOException {
+		System.out.println(Util.byteToString((byte) 128));
+		Assembler asm = new Assembler("Program.asm");
+		asm.lex();
+	}
+
+}

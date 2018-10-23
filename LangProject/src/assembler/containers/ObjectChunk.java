@@ -32,6 +32,11 @@ public class ObjectChunk {
 		return relocs;
 	}
 	
+	public void dumpb() {
+		for (int i=0; i<chunk.length; i++) {
+			
+		}
+	}
 	
 	
 	

@@ -1,0 +1,22 @@
+package main;
+
+import java.io.IOException;
+import java.util.BitSet;
+
+import assembler.Assembler;
+import assembler.DataLexer;
+
+public class Main {
+	
+	
+	
+	public static void main(String[] args) throws IOException {
+		
+		BitSet set = BitSet.valueOf(DataLexer.parseWord("65533", 0, true));
+		System.out.println(Util.bitsetToString(set));
+		
+		Assembler asm = new Assembler("Program.asm");
+		asm.lex();
+	}
+
+}

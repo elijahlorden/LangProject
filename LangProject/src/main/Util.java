@@ -5,9 +5,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.BitSet;
 import java.util.Scanner;
 
 public class Util {
@@ -67,6 +67,12 @@ public class Util {
 		}
 	}
 	
+	public static void printArray(boolean[] array) {
+		for (int i=0;i<array.length;i++) {
+			System.out.println(array[i]);
+		}
+	}
+	
 	/***
 	 * Concatenates two arrays
 	 * @param arr1
@@ -79,10 +85,21 @@ public class Util {
 		return res;
 	}
 	
+	public static String byteToString(byte b) {
+		String s = "";
+		for (int i=0; i<8; i++) {
+			s = s + ((((b >>> i) & 1) > 0) ? "1" : "0");
+		}
+		return s;
+	}
 	
-	
-	
-	
+	public static String byteArrayToString(byte[] arr) {
+		String s = "";
+		for (int i=0; i<arr.length; i++) {
+			s = s + byteToString(arr[i]) + " ";
+		}
+		return s;
+	}
 	
 	
 }

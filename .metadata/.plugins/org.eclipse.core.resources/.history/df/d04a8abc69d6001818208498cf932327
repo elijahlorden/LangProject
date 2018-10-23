@@ -1,0 +1,18 @@
+package main;
+
+import java.io.IOException;
+import java.util.BitSet;
+
+public class Main {
+	
+	
+	
+	public static void main(String[] args) throws IOException {
+		
+		BitSet b = BitSet.valueOf({(byte) 0});
+		
+		Assembler asm = new Assembler("Program.asm");
+		asm.lex();
+	}
+
+}

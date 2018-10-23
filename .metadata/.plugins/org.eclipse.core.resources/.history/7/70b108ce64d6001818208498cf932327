@@ -1,0 +1,2 @@
+: word1 dup + ;
+12 word1 .

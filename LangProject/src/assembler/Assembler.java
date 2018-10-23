@@ -29,6 +29,7 @@ public class Assembler {
 	private void log(String s) {
 		System.out.println("[Assembler] (" + filename + ") " + s);
 	}
+	
 	 /***
 	  * Lex the input file into discrete chunks
 	  */
@@ -126,6 +127,8 @@ public class Assembler {
 		byte[] data = DataLexer.translateData(ds, type, ln);
 		ObjectChunk dataChunk = new ObjectChunk(key, data);
 		obj.addChunk(dataChunk);
+		System.out.println(key);
+		
 	}
 	
 	

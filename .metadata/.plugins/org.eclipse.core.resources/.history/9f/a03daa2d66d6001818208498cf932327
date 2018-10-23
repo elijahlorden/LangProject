@@ -1,0 +1,17 @@
+package main;
+
+import java.io.IOException;
+
+import assembler.Assembler;
+
+public class Main {
+	
+	
+	
+	public static void main(String[] args) throws IOException {
+		System.out.println((Util.boolArrayToString(Util.byteToBoolArray((byte) 128))));
+		Assembler asm = new Assembler("Program.asm");
+		asm.lex();
+	}
+
+}

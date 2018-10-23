@@ -58,7 +58,7 @@ public class DataLexer {
 	 * @return binary representation of the data
 	 * @throws NumberFormatException
 	 */
-	private static byte[] parseByte(String data, int ln, boolean unsigned) throws NumberFormatException { //1-byte values
+	public static byte[] parseByte(String data, int ln, boolean unsigned) throws NumberFormatException { //1-byte values
 		if (data.charAt(0) == '\'') {
 			if (data.charAt(data.length()-1) != '\'' || data.length() > 3) Util.error("Assembler", "Malformed character", ln);
 			return new byte[] {(byte) data.charAt(1)};
@@ -78,14 +78,14 @@ public class DataLexer {
 	 * @return binary representation of the data
 	 * @throws NumberFormatException
 	 */
-	private static byte[] parseWord(String data, int ln, boolean unsigned) throws NumberFormatException { //2-byte values
+	public static byte[] parseWord(String data, int ln, boolean unsigned) throws NumberFormatException { //2-byte values
 		Short n;
 		if (unsigned) {
 			n = (short) (Integer.parseInt(data) & 0xFFFF);
 		} else {
 			n = Short.parseShort(data);
 		}
-		return new byte[] {(byte) ((n>>>8) & 0xFF), (byte) (n & 0x00FF)};
+		return new byte[] {(byte) (n & 0xFF), (byte) ((n>>>8) & 0xFF)};
 	}
 	
 	/***
@@ -96,15 +96,15 @@ public class DataLexer {
 	 * @return binary representation of the data
 	 * @throws NumberFormatException
 	 */
-	private static byte[] parseSWord(String data, int ln, boolean unsigned) throws NumberFormatException { //3-byte values
+	public static byte[] parseSWord(String data, int ln, boolean unsigned) throws NumberFormatException { //3-byte values
 		if (unsigned) {
 			Integer n = Integer.parseUnsignedInt(data);
-			return new byte[] {(byte) ((n>>>12) & 0xFF), (byte) ((n>>>8) & 0xFF), (byte) (n & 0xFF)};
+			return new byte[] {(byte) (n & 0xFF), (byte) ((n>>>8) & 0xFF), (byte) ((n>>>16) & 0xFF)};
 		} else {
 			Integer n = Integer.parseInt(data);
-			n = n << 9; //Arithmatic left shift to join the sword with the sign bit
-			n = n >>> 9; //Logical right shift to fix the position of the sword
-			return new byte[] {(byte) ((n>>>12) & 0xFF), (byte) ((n>>>8) & 0xFF), (byte) (n & 0xFF)};
+			n = n << 8; //Arithmatic left shift to join the sword with the sign bit
+			n = n >>> 8; //Logical right shift to fix the position of the sword
+			return new byte[] {(byte) (n & 0xFF), (byte) ((n>>>8) & 0xFF), (byte) ((n>>>16) & 0xFF)};
 		}
 	}
 	
@@ -117,7 +117,7 @@ public class DataLexer {
 	 * @return binary representation of the data
 	 * @throws NumberFormatException
 	 */
-	private static byte[] parseType(String type, String data, int ln, boolean unsigned) throws NumberFormatException {
+	public static byte[] parseType(String type, String data, int ln, boolean unsigned) throws NumberFormatException {
 		switch(type) {
 			case "byte":
 				return parseByte(data, ln, unsigned);
@@ -141,7 +141,7 @@ public class DataLexer {
 	 * @return binary representation of the data
 	 * @throws NumberFormatException
 	 */
-	private static byte[] getNumericData(String data, String type, boolean unsigned, int ln) throws NumberFormatException {
+	public static byte[] getNumericData(String data, String type, boolean unsigned, int ln) throws NumberFormatException {
 		byte[] out = new byte[0];
 		if (data.indexOf(',') != -1) {
 			String[] parts = data.split(",");
@@ -160,7 +160,7 @@ public class DataLexer {
 	 * @return binary representation of the data
 	 * @throws NumberFormatException
 	 */
-	private static byte[] getTextData(String data, int ln, boolean terminate) throws NumberFormatException {
+	public static byte[] getTextData(String data, int ln, boolean terminate) throws NumberFormatException {
 		byte[] str = new byte[data.length()-2];
 		if (data.charAt(0) != '"' || data.charAt(data.length()-1) != '"') Util.error("Assembler", "Malformed string", ln);
 		for (int i=1; i<data.length()-2; i++) {
@@ -178,7 +178,7 @@ public class DataLexer {
 	 * @return an empty byte array
 	 * @throws NumberFormatException
 	 */
-	private static byte[] getBlock(String data) throws NumberFormatException {
+	public static byte[] getBlock(String data) throws NumberFormatException {
 		return new byte[Integer.parseInt(data)];
 	}
 	
