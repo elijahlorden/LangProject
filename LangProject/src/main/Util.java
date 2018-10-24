@@ -87,6 +87,10 @@ public class Util {
 		return res;
 	}
 	
+	public static byte[] concatArrays(byte[] arr1, byte[] arr2, byte[] arr3) {
+		return concatArrays(arr1, concatArrays(arr2, arr3));
+	}
+	
 	/***
 	 * Get the binary string representation of a single byte
 	 * Uses little endian formatting

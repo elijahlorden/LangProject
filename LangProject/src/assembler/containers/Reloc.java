@@ -13,8 +13,8 @@ public class Reloc {
 	 * LINKGLOBAL	- link to global symbol
 	 */
 	private String symbol;
-	private int max;
-	private int min;
+	private Integer max;
+	private Integer min;
 	
 	public Reloc(int address, String operation, String symbol) {
 		this.address = address;
@@ -46,6 +46,9 @@ public class Reloc {
 	
 	@Override
 	public String toString() {
+		if (min != null && max != null) {
+			return String.format("%06X %s %s %d %d", address, operation, symbol, min, max);
+		}
 		return String.format("%06X %s %s", address, operation, symbol);
 	}
 	

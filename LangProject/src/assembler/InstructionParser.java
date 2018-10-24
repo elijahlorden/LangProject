@@ -7,7 +7,7 @@ import main.Util;
 
 public class InstructionParser {
 	
-	public static final String[] byteLengthMappings = {"byte", "word", "sword"};
+	public static final String[] byteLengthMappings = {"N/A", "byte", "word", "sword"};
 	
 	/***
 	 * Parse an instruction into an ObjectChunk, relocs included when necessary
@@ -37,18 +37,18 @@ public class InstructionParser {
 	 * @param s the string to translate
 	 * @return the input string translated into a register address
 	 */
-	public static short getRegister(String s, int ln) throws NumberFormatException {
+	public static byte getRegister(String s, int ln) throws NumberFormatException {
 		if (s.length() < 1) Util.error("Assembler", "Incorrectly formatted register ID/alias", ln);
 		if (s.charAt(0) == '$') {
-			Short mapping = MachineInfo.registerAliases.get(s.substring(1));
+			Integer mapping = MachineInfo.registerAliases.get(s.substring(1));
 			if (mapping != null) {
-				return mapping;
+				return (byte) (mapping & 0xFF);
 			} else {
 				Util.error("Assembler", "Unknown register alias", ln);
 				return 0;
 			}
 		} else {
-			return Short.parseShort(s);
+			return (byte) (Integer.parseInt(s) & 0xFF);
 		}
 	}
 	
@@ -102,10 +102,10 @@ public class InstructionParser {
 	 */
 	public static ParsedInstruction parseLDI(String[] line, int ln) throws NumberFormatException {
 		if (line.length < 3) Util.error("Assembler", "Incorrectly formatted LDI instruction", ln);
-		int r = getRegister(line[1], ln);
-		short al, opcode;
-		if (line[0].length() >= 4) {
-			al = Short.parseShort(line[0].substring(3, 3));
+		byte[] regArg = getRegisterArg(getRegister(line[1], ln));
+		Integer al, opcode;
+		if (line[0].length() >= 4 && line[0].charAt(3) != '_' && line[0].charAt(3) != 'U') {
+			al = Integer.parseInt(String.valueOf(line[0].charAt(3)));
 			String op = (al == 1) ? "LDI1" : (al == 2) ? "LDI2" : (al == 3) ? "LDI3" : "ERR";
 			if (op == "ERR") Util.error("Assembler", "LDI cannot load more than 3 bytes", ln);
 			opcode = MachineInfo.opcodes.get(op);
@@ -114,19 +114,19 @@ public class InstructionParser {
 			opcode = MachineInfo.opcodes.get("LDI1"); //default to LDI1 (LDI == LDI1)
 		}
 		boolean isUnsigned = (line[0].charAt(line[0].length()-1) == '_' || line[0].charAt(line[0].length()-1) == 'U'); //LDIX_ & LDIXU == unsigned LDI
-		int maxN = (isUnsigned) ? (2^(al*8))-1 : (2^((al*8)-1))-1; //max immediate number
-		int minN = (isUnsigned) ? 0 : -(2^((al*8)-1)); //min immediate number
+		int maxN = (isUnsigned) ? ((int)Math.pow(2,(al*8)))-1 : ((int)Math.pow(2,((al*8)-1)))-1; //max immediate number
+		int minN = (isUnsigned) ? 0 : -((int)Math.pow(2,((al*8)-1))); //min immediate number
 		if (isNumber(line[2])) {
 			int n = Integer.parseInt(line[2]);
 			if (n > maxN || n < minN) Util.error("Assembler", "Immediate operand out of bounds", ln);
 			byte[] nBytes = DataParser.parseType(byteLengthMappings[al], line[2], ln, isUnsigned);
-			return new ParsedInstruction(Util.concatArrays(new byte[] {(byte) opcode}, nBytes));
+			return new ParsedInstruction(Util.concatArrays(new byte[] {(byte) opcode.intValue()}, regArg, nBytes));
 		} else {
 			String relocOp = (al == 1) ? "CONST1" : (al == 2) ? "CONST2" : (al == 3) ? "CONST3" : "ERR";
 			if (relocOp == "ERR") Util.error("Assembler", "Unknown error creating reloc", ln);
-			Reloc reloc = new Reloc(1, relocOp, line[2], minN, maxN);
+			Reloc reloc = new Reloc(2, relocOp, line[2], minN, maxN); //Reloc will start at byte 3
 			byte[] space = new byte[al];
-			return new ParsedInstruction(Util.concatArrays(new byte[] {(byte) opcode}, space), reloc);
+			return new ParsedInstruction(Util.concatArrays(new byte[] {(byte) opcode.intValue()}, regArg, space), reloc);
 		}
 	}
 	

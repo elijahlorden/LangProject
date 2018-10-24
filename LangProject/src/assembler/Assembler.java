@@ -73,7 +73,7 @@ public class Assembler {
 							Util.error("Assembler", "No section declared", i+1);
 							break;
 						case 1:
-							lexDataLine(line, i+1);
+							parseDataLine(line, i+1);
 							break;
 						case 2:
 							break;
@@ -115,11 +115,11 @@ public class Assembler {
 	}
 	
 	/***
-	 * Lexes a line from the .data section
-	 * @param line the line to be lexed
+	 * Parses a line from the .data section
+	 * @param line the line to be parsed
 	 * @param ln the current line number
 	 */
-	private void lexDataLine(String line, int ln) {
+	private void parseDataLine(String line, int ln) {
 		String[] parts = line.split("\\s+");
 		if (parts.length < 3) Util.error("Assembler", "Invalid data declaration", ln);
 		if (parts[0].charAt(parts[0].length()-1) != ':') Util.error("Assembler", "Labels must be postfixed by a colon (:)", ln);
@@ -142,7 +142,7 @@ public class Assembler {
 		//System.out.println(key);
 	}
 	
-	private void lexTextLine(String line, int ln) {
+	private void parseTextLine(String line, int ln) {
 		
 	}
 	
