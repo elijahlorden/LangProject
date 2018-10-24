@@ -12,6 +12,8 @@ import java.util.Scanner;
 
 public class Util {
 	
+	private final static String[] hexMapping = {"0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F"};
+	
 	/***
 	 * Attempts to read the given file into a list of lines
 	 * @param path path of the file to be read
@@ -85,21 +87,67 @@ public class Util {
 		return res;
 	}
 	
-	public static String byteToString(byte b) {
+	/***
+	 * Get the binary string representation of a single byte
+	 * Uses little endian formatting
+	 * @param b the byte to translate
+	 * @return the byte translated into a binary string
+	 */
+	public static String byteToBinaryString(byte b) {
 		String s = "";
 		for (int i=0; i<8; i++) {
-			s = s + ((((b >>> i) & 1) > 0) ? "1" : "0");
+			s = s + ((((b >>> (7-i)) & 1) > 0) ? "1" : "0");
 		}
 		return s;
 	}
 	
-	public static String byteArrayToString(byte[] arr) {
+	/***
+	 * Get the binary string representation of a byte array
+	 * Octets are delimited by a space
+	 * Bytes are translated in little endian format
+	 * @param arr byte array to be translated
+	 * @return the byte array translated into a binary string
+	 */
+	public static String byteArrayToBinaryString(byte[] arr) {
 		String s = "";
 		for (int i=0; i<arr.length; i++) {
-			s = s + byteToString(arr[i]) + " ";
+			s = s + byteToBinaryString(arr[i]) + " ";
 		}
 		return s;
 	}
+	
+	/***
+	 * Get the hexadecimal string representation of a single byte
+	 * @param b the byte to translate
+	 * @return the byte translated into a hexadecimal string
+	 */
+	public static String byteToHexString(byte b) {
+		int q1 = (int) (b & 0x0F);
+		int q2 = (int) ((b >>> 4) & 0x0F);
+		return hexMapping[q2] + hexMapping[q1];
+	}
+	
+	/***
+	 * Get the hexadecimal string representation of a byte array
+	 * @param arr the array to be translated
+	 * @param columns the number of bytes per line
+	 * @return the array translated into a hexadecimal string
+	 */
+	public static String byteArrayToHexString(byte[] arr, int columns) {
+		columns = (columns >= 1) ? columns : 1;
+		String s = "";
+		for (int i=0; i<arr.length; i++) {
+			s = s + byteToHexString(arr[i]);
+			s = s + (((i+1) % columns == 0) ? "\n" : " ");
+		}
+		return s;
+	}
+	
+	
+	
+	
+	
+	
 	
 	
 }

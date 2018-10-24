@@ -163,7 +163,7 @@ public class DataLexer {
 	public static byte[] getTextData(String data, int ln, boolean terminate) throws NumberFormatException {
 		byte[] str = new byte[data.length()-2];
 		if (data.charAt(0) != '"' || data.charAt(data.length()-1) != '"') Util.error("Assembler", "Malformed string", ln);
-		for (int i=1; i<data.length()-2; i++) {
+		for (int i=1; i<data.length()-1; i++) {
 			str[i-1] = (byte) data.charAt(i);
 		}
 		if (terminate) {

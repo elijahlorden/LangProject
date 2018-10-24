@@ -8,16 +8,26 @@ public class ObjectChunk {
 	private byte[] chunk; //Raw chunk data
 	private ArrayList<Reloc> relocs;
 	
+	private int zero;
+	
 	public ObjectChunk(String label, byte[] chunk, ArrayList<Reloc> relocs) {
 		this.label = label;
 		this.chunk = chunk;
 		this.relocs = relocs;
+		this.zero = 0;
 	}
 	
 	public ObjectChunk(String label, byte[] chunk) {
 		this.label = label;
 		this.chunk = chunk;
 		this.relocs = new ArrayList<Reloc>();
+		this.zero = 0;
+	}
+	
+	public ObjectChunk(String label) {
+		this.label = label;
+		this.relocs = new ArrayList<Reloc>();
+		this.zero = 0;
 	}
 
 	public String getLabel() {
@@ -32,9 +42,21 @@ public class ObjectChunk {
 		return relocs;
 	}
 	
+	public void addReloc(Reloc r) {
+		relocs.add(r);
+	}
 	
+	public int length() {
+		return chunk.length;
+	}
 	
+	public int getZero() {
+		return zero;
+	}
 	
+	public void setZero(int zero) {
+		this.zero = zero;
+	}
 	
 	
 	

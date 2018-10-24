@@ -30,6 +30,16 @@ public class Assembler {
 		System.out.println("[Assembler] (" + filename + ") " + s);
 	}
 	
+	/***
+	 * Compile the code into an object
+	 */
+	public void compile() {
+		log("Start Compile");
+		obj.compile();
+		log("Compile completed");
+		obj.dump();
+	}
+	
 	 /***
 	  * Lex the input file into discrete chunks
 	  */
@@ -127,10 +137,8 @@ public class Assembler {
 		byte[] data = DataLexer.translateData(ds, type, ln);
 		ObjectChunk dataChunk = new ObjectChunk(key, data);
 		obj.addChunk(dataChunk);
-		System.out.println(key);
-		
+		//System.out.println(key);
 	}
-	
 	
 	
 	

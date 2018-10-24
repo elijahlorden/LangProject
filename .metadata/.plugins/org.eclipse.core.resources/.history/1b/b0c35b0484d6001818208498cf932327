@@ -1,0 +1,27 @@
+Internal memory:
+256*24 return stack
+256*24 data stack
+
+Registers:
+PC	- Program Counter (24-bit)
+IR	- Instruction Register (8-bit)
+DSP	- Data Stack Pointer (8-bit)
+RSP - Return Stack Pointer (8-bit)
+
+OPCODE		NAME		ARGS			DESC
+0			NOOP		N/A				No Operation
+
+1			(literal)	|24-bit|		Push literal value onto the data stack
+
+2			+			N/A				Pop the top two elements off the data stack, add them, and push the result onto the data stack
+
+3			-			N/A				Pop the top two elements off the data stack, subtract them, and push the result onto the data stack
+
+4			*			N/A				Pop the top two elements off the data stack, multiply them, and push the result onto the data stack
+
+5			>R			N/A				Pop value off data stack and push it onto return stack
+
+6			<R			N/A				Pop value off return stack and push it onto data stack
+
+7			HERE		N/A				Push PC onto the data stack
+

@@ -1,0 +1,20 @@
+package assembler;
+
+import assembler.containers.ObjectChunk;
+
+public class InstructionLexer {
+	
+	public ObjectChunk translateInstruction(String line, int ln) {
+		ObjectChunk o = new ObjectChunk();
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+}
