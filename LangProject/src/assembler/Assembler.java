@@ -12,6 +12,8 @@ public class Assembler {
 	private String filename;
 	private ASMObject obj;
 	
+	private String currentLabel;
+	
 	/***
 	 * Creates a new Assembler object
 	 * @param filename
@@ -41,10 +43,10 @@ public class Assembler {
 	}
 	
 	 /***
-	  * Lex the input file into discrete chunks
+	  * Parse the input file into discrete chunks
 	  */
-	public void lex() {
-		log("Start Lex");
+	public void parse() {
+		log("Start Parse");
 		byte section = 0;
 		for (int i=0; i<rawLines.size(); i++) {
 			String line = rawLines.get(i);
@@ -86,7 +88,7 @@ public class Assembler {
 					break;
 			}
 		}
-		log("Lex completed");
+		log("Parse completed");
 	}
 	
 	/***
@@ -134,13 +136,15 @@ public class Assembler {
 			}
 			ds = ds.substring(0, ds.length()-1);
 		}
-		byte[] data = DataLexer.translateData(ds, type, ln);
+		byte[] data = DataParser.translateData(ds, type, ln);
 		ObjectChunk dataChunk = new ObjectChunk(key, data);
 		obj.addChunk(dataChunk);
 		//System.out.println(key);
 	}
 	
-	
+	private void lexTextLine(String line, int ln) {
+		
+	}
 	
 	
 	

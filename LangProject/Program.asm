@@ -1,6 +1,3 @@
-.import #import from the global symbol table
-exampleImport:otherFile.otherSubroutine
-
 .data #variable declaration
 byte: ._byte 110,'a','b','c' #an underscore prefixing the datatype will read the provided values as unsigned
 word: .word 35
@@ -13,16 +10,6 @@ block: .block 16 #allocate 16 bytes initialized to 0
 
 .text #code
 
-main:
-call exampleImport
-call subroutine
-ldi $r1 4
-add $r0 $r0 $r1
-ret
-subroutine:
 ldi $r0 1
-ret
 
-.export #export to the global symbol table
-program.entrypoint:main
-Program.subroutine:subroutine
+

@@ -7,14 +7,29 @@ public class Reloc {
 	/*
 	 * Reloc operations:
 	 * LINKLOCAL	- link to local symbol
+	 * CONST1		- replace with 1-byte local constant
+	 * CONST2		- replace with 2-byte local constant
+	 * CONST3		- replace with 3-byte local constant
 	 * LINKGLOBAL	- link to global symbol
 	 */
 	private String symbol;
+	private int max;
+	private int min;
 	
 	public Reloc(int address, String operation, String symbol) {
 		this.address = address;
 		this.operation = operation;
 		this.symbol = symbol;
+		this.max = Integer.MAX_VALUE;
+		this.min = Integer.MIN_VALUE;
+	}
+	
+	public Reloc(int address, String operation, String symbol, int min, int max) {
+		this.address = address;
+		this.operation = operation;
+		this.symbol = symbol;
+		this.max = max;
+		this.min = min;
 	}
 
 	public int getAddress() {

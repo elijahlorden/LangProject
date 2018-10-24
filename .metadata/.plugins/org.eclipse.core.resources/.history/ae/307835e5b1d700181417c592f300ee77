@@ -1,0 +1,32 @@
+package main;
+
+import java.util.AbstractMap.SimpleEntry;
+import java.util.Map;
+import java.util.stream.Stream;
+
+public class MachineInfo {
+	
+	@SuppressWarnings("unchecked")
+	public static final Map<String, Number> registerAliases = (Map<String, Number>) Stream.of(
+			new SimpleEntry<>("r0", 0), //r0 - r7 (Registers 0 - 7) are general purpose registers (nonvolatile)
+			new SimpleEntry<>("r1", 1),
+			new SimpleEntry<>("r2", 2),
+			new SimpleEntry<>("r3", 3),
+			new SimpleEntry<>("r4", 4),
+			new SimpleEntry<>("r5", 5),
+			new SimpleEntry<>("r6", 6),
+			new SimpleEntry<>("r7", 7),
+			new SimpleEntry<>("r8", 8),
+			new SimpleEntry<>("r9", 9),
+			new SimpleEntry<>("r10", 10),
+			new SimpleEntry<>("r11", 11),
+			new SimpleEntry<>("r12", 12),
+			new SimpleEntry<>("r13", 13),
+			new SimpleEntry<>("r14", 14),
+			new SimpleEntry<>("r15", 15),
+			new SimpleEntry<>("ip", 8), //ip (Register 8) is the instruction pointer
+			new SimpleEntry<>("sp", 9) //sp (Register 9) is the stack pointer
+			
+	);
+
+}

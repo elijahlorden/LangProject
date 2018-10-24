@@ -3,3 +3,6 @@
 1540162157163	Move compilation unit
 1540253825751	Move file
 1540272344113	Rename type 'Instructionlexer'
+1540399294464	Rename package 'Main'
+1540401928890	Rename type 'DataLexer'
+1540401937196	Rename type 'InstructionLexer'

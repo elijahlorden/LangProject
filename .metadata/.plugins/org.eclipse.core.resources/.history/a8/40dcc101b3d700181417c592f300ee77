@@ -1,0 +1,69 @@
+package assembler;
+
+import assembler.containers.ParsedInstruction;
+import main.MachineInfo;
+import main.Util;
+
+public class InstructionParser {
+	
+	/***
+	 * Parse an instruction into an ObjectChunk, relocs included when necessary
+	 * @param line whitespace-delimited input line
+	 * @param ln current line number
+	 * @return the input parsed into an ObjectChunk
+	 */
+	public ParsedInstruction translateInstruction(String line, int ln) {
+		String[] parts = line.split("\\s+");
+		switch(parts[0].toUpperCase()) {
+		case "LDI":
+			return parseLDI(line, ln);
+		}
+		return null;
+	}
+	
+	/***
+	 * Get a register id from the input
+	 * Will accept register aliases prefixed with a dollar sign ($)
+	 * @param s the string to translate
+	 * @return the input string translated into a register address
+	 */
+	public short getRegister(String s, int ln) throws NumberFormatException {
+		if (s.length() < 1) Util.error("Assembler", "Incorrectly formatted register ID/alias", ln);
+		if (s.charAt(0) == '$') {
+			Short mapping = MachineInfo.registerAliases.get(s.substring(1));
+			if (mapping != null) {
+				return mapping;
+			} else {
+				Util.error("Assembler", "Unknown register alias", ln);
+				return 0;
+			}
+		} else {
+			return Short.parseShort(s);
+		}
+	}
+	
+	/***
+	 * Parse an LDI (Load immediate) instruction
+	 * Format: LDI Register ImmediateValue
+	 * Register may be either a number of register alias (ex. r0, sp)
+	 * ImmediateValue must be an immediate constant (1-byte, 2-byte, or 3-byte)
+	 * @param line whitespace-delimited input line
+	 * @param ln current line number
+	 * @return the input parsed into an ObjectChunk
+	 */
+	public ParsedInstruction parseLDI(String line, int ln) { //LDI also has a variant 'LDA' which loads the address of a label
+		if (line.length() < 3) Util.error("Assembler", "Incorrectly formatted LDI instruction", ln);
+		
+		
+		
+		return null;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+}
