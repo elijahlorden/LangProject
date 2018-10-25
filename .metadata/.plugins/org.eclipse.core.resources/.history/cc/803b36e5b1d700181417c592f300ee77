@@ -1,5 +1,0 @@
-package assembler.containers;
-
-public class ParsedInstruction {
-
-}
