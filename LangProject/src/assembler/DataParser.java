@@ -182,6 +182,44 @@ public class DataParser {
 		return new byte[Integer.parseInt(data)];
 	}
 	
+	/***
+	 * Determines the size of a constant and parses it into a byte array
+	 * @param data the constant to be parsed
+	 * @param unsigned if true, the constant will be parsed as unsigned
+	 * @param ln the current line number
+	 * @return the binary representation of the constant
+	 * @throws NumberFormatException
+	 */
+	public static byte[] parseConst(String data, boolean unsigned, int ln)  {
+		try {
+		if (data.charAt(0) == '\'') return parseByte(data, ln, unsigned);
+		int i = (unsigned) ? Integer.parseUnsignedInt(data) : Integer.parseInt(data);
+		if (unsigned) {
+			return (i <= 255) ? parseByte(data, ln, true) :
+				(i <= 65535) ? parseWord(data, ln, true) : parseSWord(data, ln, true);
+		} else {
+			return (i <= 127 && i >= -128) ? parseByte(data, ln, false) :
+				(i <= 32767 && i >= -32768) ? parseWord(data, ln, true) : parseSWord(data, ln, true);
+		}
+		} catch (NumberFormatException e) {
+			Util.error("Assembler", "Invalid constant", ln);
+			return null;
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	

@@ -136,10 +136,16 @@ public class Assembler {
 			}
 			ds = ds.substring(0, ds.length()-1);
 		}
-		byte[] data = DataParser.translateData(ds, type, ln);
-		ObjectChunk dataChunk = new ObjectChunk(key, data);
-		obj.addChunk(dataChunk);
-		//System.out.println(key);
+		if (type.equals("const")) {
+			obj.addConstant(parts[1].substring(0, parts[1].length()-1), DataParser.parseConst(parts[2], false, ln), ln); //Signed constant
+		} else if (type.equals("_const")) {
+			obj.addConstant(parts[1].substring(0, parts[1].length()-1), DataParser.parseConst(parts[2], true, ln), ln); //Unsigned constant
+		} else {
+			byte[] data = DataParser.translateData(ds, type, ln);
+			ObjectChunk dataChunk = new ObjectChunk(key, data);
+			obj.addChunk(dataChunk);
+			//System.out.println(key);
+		}
 	}
 	
 	private void parseTextLine(String line, int ln) {
