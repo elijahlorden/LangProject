@@ -12,6 +12,7 @@ const1: .const 1234567 #constants are assigned a data width by the assembler
 
 .text #code
 
+main:
 ldi $r0 1
 
 

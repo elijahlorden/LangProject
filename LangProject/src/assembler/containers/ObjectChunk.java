@@ -2,21 +2,25 @@ package assembler.containers;
 
 import java.util.ArrayList;
 
+import main.Util;
+
 public class ObjectChunk {
 	
 	private String label; //Label (symbol) of the chunk
 	private byte[] chunk; //Raw chunk data
 	private ArrayList<Reloc> relocs;
 	
-	private DebugLabel debugLabel; //Label used in the hex debugger
+	private ArrayList<DebugLabel> debugLabels; //Label used in the hex debugger
 	
-	private int zero;
+	private int zero, internalPointer;
 	
 	public ObjectChunk(String label, byte[] chunk, ArrayList<Reloc> relocs) {
 		this.label = label;
 		this.chunk = chunk;
 		this.relocs = relocs;
 		this.zero = 0;
+		this.internalPointer = 0;
+		debugLabels = new ArrayList<DebugLabel>();
 	}
 	
 	public ObjectChunk(String label, byte[] chunk) {
@@ -24,12 +28,28 @@ public class ObjectChunk {
 		this.chunk = chunk;
 		this.relocs = new ArrayList<Reloc>();
 		this.zero = 0;
+		this.internalPointer = 0;
+		debugLabels = new ArrayList<DebugLabel>();
 	}
 	
 	public ObjectChunk(String label) {
 		this.label = label;
 		this.relocs = new ArrayList<Reloc>();
 		this.zero = 0;
+		this.internalPointer = 0;
+		debugLabels = new ArrayList<DebugLabel>();
+	}
+	
+	public void addParsedInstruction(ParsedInstruction ins, DebugLabel d) {
+		if (chunk == null) chunk = new byte[0];
+		if (ins.getReloc() != null) {
+			ins.getReloc().setAddress(ins.getReloc().getAddress() + internalPointer); //Offset the reloc by the pointer
+			relocs.add(ins.getReloc());
+		}
+		d.setAddress(d.getAddress() + internalPointer); //Offset the debugLabel by the pointer
+		debugLabels.add(d);
+		chunk = Util.concatArrays(chunk, ins.getChunk()); //Append instruction to byte array
+		internalPointer += ins.getChunk().length;
 	}
 
 	public String getLabel() {
@@ -58,15 +78,14 @@ public class ObjectChunk {
 	
 	public void setZero(int zero) {
 		this.zero = zero;
-		if (this.debugLabel != null) this.debugLabel.setAddress(zero);
 	}
 	
-	public void setDebugLabel(DebugLabel label) {
-		debugLabel = label;
+	public void addDebugLabel(DebugLabel label) {
+		debugLabels.add(label);
 	}
 	
-	public DebugLabel getDebugLabel() {
-		return debugLabel;
+	public ArrayList<DebugLabel> getDebugLabels() {
+		return debugLabels;
 	}
 	
 }

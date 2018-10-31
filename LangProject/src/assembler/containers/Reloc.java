@@ -35,6 +35,10 @@ public class Reloc {
 	public int getAddress() {
 		return address;
 	}
+	
+	public void setAddress(int address) {
+		this.address = address;
+	}
 
 	public String getOperation() {
 		return operation;

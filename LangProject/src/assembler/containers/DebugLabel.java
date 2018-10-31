@@ -4,17 +4,19 @@ import main.Enum.DebugType;
 
 public class DebugLabel {
 	
-	private int address, length;
-	private String label, filename;
+	private int address, length, ln;
+	private String label, filename, lineText;
 	
 	private DebugType type;
 	
-	public DebugLabel(int address, int length, String label, String filename, DebugType type) {
+	public DebugLabel(int address, int length, String label, String filename, DebugType type, int ln, String lineText) {
 		this.address = address;
 		this.length = length;
 		this.label = label;
 		this.type = type;
 		this.filename = filename;
+		this.ln = ln;
+		this.lineText = lineText;
 	}
 
 	public int getAddress() {
@@ -43,6 +45,22 @@ public class DebugLabel {
 
 	public void setFilename(String filename) {
 		this.filename = filename;
+	}
+
+	public int getLn() {
+		return ln;
+	}
+
+	public void setLn(int ln) {
+		this.ln = ln;
+	}
+
+	public String getLineText() {
+		return lineText;
+	}
+
+	public void setLineText(String lineText) {
+		this.lineText = lineText;
 	}
 	
 	

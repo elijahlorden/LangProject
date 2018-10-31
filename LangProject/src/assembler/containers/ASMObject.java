@@ -62,7 +62,8 @@ public class ASMObject {
 			c.setZero(compilePointer); //Set the chunk address to the next address
 			symbolLocs.put(c.getLabel(), compilePointer); //Store the location of this chunk
 			appendByteArray(c.getChunk()); //Append the chunk to the byte array
-			addDebugLabel(c.getDebugLabel());
+			addRelocs(c.getRelocs(), compilePointer); //Translate and add any relocs to the object
+			addDebugLabels(c.getDebugLabels(), compilePointer); //Translate and add the debug labels to the object
 			compilePointer += c.length(); //Set the next address to the byte after the chunk
 		}
 		
@@ -106,8 +107,18 @@ public class ASMObject {
 		return debugLabels;
 	}
 	
-	public void addDebugLabel(DebugLabel label) {
-		this.debugLabels.add(label);
+	public void addDebugLabels(ArrayList<DebugLabel> labels, int compilePointer) {
+		for (DebugLabel d : labels) {
+			d.setAddress(d.getAddress() + compilePointer);
+			debugLabels.add(d);
+		}
+	}
+	
+	public void addRelocs(ArrayList<Reloc> relocs, int compilePointer) {
+		for (Reloc r : relocs) {
+			r.setAddress(r.getAddress() + compilePointer);
+			relocs.add(r);
+		}
 	}
 	
 }

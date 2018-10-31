@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import assembler.containers.ASMObject;
 import assembler.containers.DebugLabel;
 import assembler.containers.ObjectChunk;
+import assembler.containers.ParsedInstruction;
 import main.Enum.DebugType;
 import main.Util;
 
@@ -14,7 +15,8 @@ public class Assembler {
 	private String filename;
 	private ASMObject obj;
 	
-	private String currentLabel;
+	private String currentTextLabel;
+	private ObjectChunk currentTextChunk;
 	
 	/***
 	 * Creates a new Assembler object
@@ -78,6 +80,7 @@ public class Assembler {
 							parseDataLine(line, i+1);
 							break;
 						case 2:
+							parseTextLine(line, i+1);
 							break;
 						case 3:
 							break;
@@ -90,6 +93,7 @@ public class Assembler {
 					break;
 			}
 		}
+		if (currentTextChunk != null) obj.addChunk(currentTextChunk); //Add last Text chunk to object
 		log("Parse completed");
 	}
 	
@@ -145,7 +149,7 @@ public class Assembler {
 		} else {
 			byte[] data = DataParser.translateData(ds, type, ln);
 			ObjectChunk dataChunk = new ObjectChunk(key, data);
-			dataChunk.setDebugLabel(new DebugLabel(0, data.length, line, filename, DebugType.Data));
+			dataChunk.addDebugLabel(new DebugLabel(0, data.length, key, filename, DebugType.Data, ln, line));
 			obj.addChunk(dataChunk);
 			
 			
@@ -154,7 +158,21 @@ public class Assembler {
 	}
 	
 	private void parseTextLine(String line, int ln) {
-		
+		if (line.charAt(line.length()-1) == ':') {
+			currentTextLabel = line.substring(0, line.length()-1);
+			if (currentTextChunk != null) obj.addChunk(currentTextChunk);
+			currentTextChunk = new ObjectChunk(currentTextLabel);
+			return;
+		}
+		if (currentTextLabel == null) Util.error("Assembler", "Undefined label for chunk", ln);
+		ParsedInstruction ins = InstructionParser.translateInstruction(line, ln);
+		if (ins != null) {
+			currentTextChunk.addParsedInstruction(ins, new DebugLabel(0, ins.getChunk().length, currentTextLabel, filename, DebugType.Text, ln, line));
+			
+			
+		} else {
+			Util.error("Assembler", "Unknown instruction", ln);
+		}
 	}
 	
 	public ASMObject getObject() {

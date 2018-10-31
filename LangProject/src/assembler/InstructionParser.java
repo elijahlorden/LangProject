@@ -20,7 +20,7 @@ public class InstructionParser {
 		String ins = parts[0].toUpperCase();
 		try {
 			return (
-				(ins.substring(0, 2) == "LDI") ? parseLDI(parts, ln) :
+				(ins.substring(0, 3).equals("LDI")) ? parseLDI(parts, ln) :
 				
 				
 				null
