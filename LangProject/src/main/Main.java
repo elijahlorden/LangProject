@@ -35,18 +35,27 @@ public class Main extends Application {
 		asm.parse();
 		asm.compile();
 		ASMObject obj = asm.getObject();
-		HexDebugger debugger = new HexDebugger(obj.getCompiledObject(), obj.getDebugLabels());
 		
-		ScrollPane pane = new ScrollPane();
-		pane.setContent(debugger);
-		pane.setPrefSize(512, 600);
+		startObjectDebugger(stage, obj);
 		
-		Scene scene = new Scene(pane);
-		stage.setScene(scene);
-		stage.show();
 		
 		
 		
 	}
 
+	private void startObjectDebugger(Stage stage, ASMObject obj) {
+		HexDebugger debugger = new HexDebugger(obj.getCompiledObject(), obj.getDebugLabels());
+		ScrollPane pane = new ScrollPane();
+		pane.setContent(debugger);
+		pane.setPrefSize(512, 600);
+		Scene scene = new Scene(pane);
+		stage.setScene(scene);
+		stage.show();
+	}
+	
+	
+	
+	
+	
+	
 }
