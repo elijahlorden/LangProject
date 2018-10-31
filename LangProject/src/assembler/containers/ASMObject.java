@@ -11,6 +11,8 @@ public class ASMObject {
 	private byte[] compiledObject;
 	private ArrayList<Reloc> compiledRelocs;
 	
+	private ArrayList<DebugLabel> debugLabels;
+	
 	private HashMap<String, Integer> symbolLocs;
 	private HashMap<String, byte[]> constants;
 	
@@ -20,6 +22,7 @@ public class ASMObject {
 		this.chunks = new ArrayList<ObjectChunk>();
 		this.constants = new HashMap<String, byte[]>();
 		this.symbolLocs = new HashMap<String, Integer>();
+		this.debugLabels = new ArrayList<DebugLabel>();
 	}
 	
 	/***
@@ -59,6 +62,7 @@ public class ASMObject {
 			c.setZero(compilePointer); //Set the chunk address to the next address
 			symbolLocs.put(c.getLabel(), compilePointer); //Store the location of this chunk
 			appendByteArray(c.getChunk()); //Append the chunk to the byte array
+			addDebugLabel(c.getDebugLabel());
 			compilePointer += c.length(); //Set the next address to the byte after the chunk
 		}
 		
@@ -94,8 +98,16 @@ public class ASMObject {
 		System.out.print(Util.byteArrayToHexString(compiledObject, 10));
 	}
 	
+	public byte[] getCompiledObject() {
+		return compiledObject;
+	}
 	
+	public ArrayList<DebugLabel> getDebugLabels() {
+		return debugLabels;
+	}
 	
-	
+	public void addDebugLabel(DebugLabel label) {
+		this.debugLabels.add(label);
+	}
 	
 }

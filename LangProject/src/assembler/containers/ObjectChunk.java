@@ -8,6 +8,8 @@ public class ObjectChunk {
 	private byte[] chunk; //Raw chunk data
 	private ArrayList<Reloc> relocs;
 	
+	private DebugLabel debugLabel; //Label used in the hex debugger
+	
 	private int zero;
 	
 	public ObjectChunk(String label, byte[] chunk, ArrayList<Reloc> relocs) {
@@ -56,10 +58,15 @@ public class ObjectChunk {
 	
 	public void setZero(int zero) {
 		this.zero = zero;
+		if (this.debugLabel != null) this.debugLabel.setAddress(zero);
 	}
 	
+	public void setDebugLabel(DebugLabel label) {
+		debugLabel = label;
+	}
 	
-	
-	
+	public DebugLabel getDebugLabel() {
+		return debugLabel;
+	}
 	
 }

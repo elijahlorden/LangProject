@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import assembler.containers.ASMObject;
+import assembler.containers.DebugLabel;
 import assembler.containers.ObjectChunk;
+import main.Enum.DebugType;
 import main.Util;
 
 public class Assembler {
@@ -143,8 +145,10 @@ public class Assembler {
 		} else {
 			byte[] data = DataParser.translateData(ds, type, ln);
 			ObjectChunk dataChunk = new ObjectChunk(key, data);
+			dataChunk.setDebugLabel(new DebugLabel(0, data.length, line, filename, DebugType.Data));
 			obj.addChunk(dataChunk);
-			//System.out.println(key);
+			
+			
 		}
 	}
 	
@@ -152,7 +156,9 @@ public class Assembler {
 		
 	}
 	
-	
+	public ASMObject getObject() {
+		return obj;
+	}
 	
 	
 	
