@@ -12,7 +12,8 @@ const1: .const 1234567 #constants are assigned a data width by the assembler
 
 .text #code
 
+#main is the entrypoint
 main:
-ldi $r1 3
-
+ldi $r0 const1
+ldi $r1 const1
 

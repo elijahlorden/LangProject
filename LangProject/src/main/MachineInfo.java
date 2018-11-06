@@ -7,6 +7,9 @@ import java.util.stream.Stream;
 
 public class MachineInfo {
 	
+	/***
+	 * List legal register aliases
+	 */
 	@SuppressWarnings("unchecked")
 	public static HashMap<String, Integer> registerAliases = new HashMap<String, Integer>() {{
 			put("r0", 0); //r0 - r7 (Registers 0 - 7) are general purpose registers (nonvolatile)
@@ -30,6 +33,9 @@ public class MachineInfo {
 			
 	}};
 	
+	/***
+	 * List of legal opcodes
+	 */
 	@SuppressWarnings("unchecked")
 	public static final Map<String, Integer> opcodes = new HashMap<String, Integer>() {{
 			put("NOP", 0); //No operation

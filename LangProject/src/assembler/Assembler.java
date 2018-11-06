@@ -43,7 +43,6 @@ public class Assembler {
 		log("Start Compile");
 		obj.compile();
 		log("Compile completed");
-		obj.dump();
 	}
 	
 	 /***
@@ -116,7 +115,6 @@ public class Assembler {
 		}
 		if (index == 0) return "";
 		if (index == -1) return s;
-		//System.out.println(s.substring(0,index));
 		return s.substring(0,index);
 	}
 	
@@ -157,6 +155,11 @@ public class Assembler {
 		}
 	}
 	
+	/***
+	 * Parse a line from the .text section
+	 * @param line the line to be parsed
+	 * @param ln the current line number
+	 */
 	private void parseTextLine(String line, int ln) {
 		if (line.charAt(line.length()-1) == ':') {
 			currentTextLabel = line.substring(0, line.length()-1);
@@ -167,7 +170,9 @@ public class Assembler {
 		if (currentTextLabel == null) Util.error("Assembler", "Undefined label for chunk", ln);
 		ParsedInstruction ins = InstructionParser.translateInstruction(line, ln);
 		if (ins != null) {
-			currentTextChunk.addParsedInstruction(ins, new DebugLabel(0, ins.getChunk().length, currentTextLabel, filename, DebugType.Text, ln, line));
+			DebugLabel label = new DebugLabel(0, ins.getChunk().length, currentTextLabel, filename, DebugType.Text, ln, line);
+			if (ins.getReloc() != null) label.setReloc(ins.getReloc());
+			currentTextChunk.addParsedInstruction(ins, label);
 			
 			
 		} else {
@@ -175,6 +180,10 @@ public class Assembler {
 		}
 	}
 	
+	/***
+	 * Get the ASMObject associated with this Assembler
+	 * @return the ASMObject associated with this Assembler
+	 */
 	public ASMObject getObject() {
 		return obj;
 	}

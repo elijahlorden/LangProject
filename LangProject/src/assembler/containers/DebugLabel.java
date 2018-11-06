@@ -7,6 +7,8 @@ public class DebugLabel {
 	private int address, length, ln;
 	private String label, filename, lineText;
 	
+	private Reloc reloc;
+	
 	private DebugType type;
 	
 	public DebugLabel(int address, int length, String label, String filename, DebugType type, int ln, String lineText) {
@@ -61,6 +63,14 @@ public class DebugLabel {
 
 	public void setLineText(String lineText) {
 		this.lineText = lineText;
+	}
+
+	public Reloc getReloc() {
+		return reloc;
+	}
+
+	public void setReloc(Reloc reloc) {
+		this.reloc = reloc;
 	}
 	
 	

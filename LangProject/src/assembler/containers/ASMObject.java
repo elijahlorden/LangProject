@@ -23,6 +23,7 @@ public class ASMObject {
 		this.constants = new HashMap<String, byte[]>();
 		this.symbolLocs = new HashMap<String, Integer>();
 		this.debugLabels = new ArrayList<DebugLabel>();
+		this.compiledRelocs = new ArrayList<Reloc>();
 	}
 	
 	/***
@@ -99,14 +100,27 @@ public class ASMObject {
 		System.out.print(Util.byteArrayToHexString(compiledObject, 10));
 	}
 	
+	/***
+	 * Get the compiled byte array
+	 * @return the compiled byte array
+	 */
 	public byte[] getCompiledObject() {
 		return compiledObject;
 	}
 	
+	/***
+	 * Get the list of DebugLabels for the compiled object
+	 * @return the list of DebugLabels for the compiled object
+	 */
 	public ArrayList<DebugLabel> getDebugLabels() {
 		return debugLabels;
 	}
 	
+	/***
+	 * Add DebugLabel objects to the compiled DenugLabel list
+	 * @param labels the list of DebugLabel objects to add
+	 * @param compilePointer pointer to the current compile address
+	 */
 	public void addDebugLabels(ArrayList<DebugLabel> labels, int compilePointer) {
 		for (DebugLabel d : labels) {
 			d.setAddress(d.getAddress() + compilePointer);
@@ -114,10 +128,15 @@ public class ASMObject {
 		}
 	}
 	
+	/***
+	 * Add Reloc objects to the compiled Reloc list
+	 * @param relocs the list of Reloc objects to add
+	 * @param compilePointer pointer to the current compile address
+	 */
 	public void addRelocs(ArrayList<Reloc> relocs, int compilePointer) {
 		for (Reloc r : relocs) {
 			r.setAddress(r.getAddress() + compilePointer);
-			relocs.add(r);
+			compiledRelocs.add(r);
 		}
 	}
 	

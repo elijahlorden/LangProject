@@ -82,6 +82,11 @@ public class InstructionParser {
 		return new byte[] {(byte) ((byte)((r1 << 4) & 0xF0) | (byte)(r2 & 0x0F)), (byte)(r3 << 4)};
 	}
 	
+	/***
+	 * Check if the provided string can be safely parsed into an integer
+	 * @param s the string to check
+	 * @return true if the string can be parsed into an integer, otherwise false
+	 */
 	public static boolean isNumber(String s) {
 		try {
 			Integer.parseInt(s);	
