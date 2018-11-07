@@ -2,6 +2,7 @@ package assembler.containers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import main.Util;
 
@@ -49,16 +50,11 @@ public class ASMObject {
 	 * Compile the object
 	 * - Concatenates all chunks into a single byte array
 	 * - Translates all chunk relocs and adds them to a single list
+	 * - Creates a table of all local symbols
 	 */
 	public void compile() {
 		compiledObject = new byte[getAllChunksLength()];
 		compilePointer = 0;
-		/*
-		 * For each chunk
-		 * - add it to the main byte array
-		 * - add its location to the symbol map
-		 * - translate and add its relocs to the relocs list
-		 */
 		for (ObjectChunk c : chunks) {
 			c.setZero(compilePointer); //Set the chunk address to the next address
 			symbolLocs.put(c.getLabel(), compilePointer); //Store the location of this chunk
@@ -75,21 +71,22 @@ public class ASMObject {
 	 * This must be done after compile and before the object is passed to the static linker
 	 */
 	public void doConstRelocs() {
-		for (Reloc reloc : compiledRelocs) {
+		for (Iterator<Reloc> iterator = compiledRelocs.iterator(); iterator.hasNext();) { //Use an iterator to allow for removing relocs while iterating
+			Reloc reloc = iterator.next();
 			byte[] constArray = constants.get(reloc.getSymbol());
 			switch(reloc.getOperation()) {
 			case Reloc.CONST1:
 				if (constArray == null) Util.error("Assembler", "Constant '" + reloc.getSymbol() + "' does not exist");
 				if (constArray.length > 1) Util.warn("Assembler", "Constant '" + reloc.getSymbol() + "' is of incorrect width for statement on line " + reloc.getLn() + " (The constant value will be truncated)");
 				compiledObject[reloc.getAddress()] = constArray[0];
-				compiledRelocs.remove(reloc);
+				iterator.remove();
 				break;
 			case Reloc.CONST2:
 				if (constArray == null) Util.error("Assembler", "Constant '" + reloc.getSymbol() + "' does not exist");
 				if (constArray.length > 2) Util.warn("Assembler", "Constant '" + reloc.getSymbol() + "' is of incorrect width for statement on line " + reloc.getLn() + " (The constant value will be truncated)");
 				compiledObject[reloc.getAddress()] = constArray[0];
 				compiledObject[reloc.getAddress()+1] = (constArray.length >= 2) ? constArray[1] : (byte) 0;
-				compiledRelocs.remove(reloc);
+				iterator.remove();
 				break;
 			case Reloc.CONST3:
 				if (constArray == null) Util.error("Assembler", "Constant '" + reloc.getSymbol() + "' does not exist");
@@ -97,13 +94,18 @@ public class ASMObject {
 				compiledObject[reloc.getAddress()] = constArray[0];
 				compiledObject[reloc.getAddress()+1] = (constArray.length >= 2) ? constArray[1] : (byte) 0;
 				compiledObject[reloc.getAddress()+2] = (constArray.length >= 3) ? constArray[2] : (byte) 0;
-				compiledRelocs.remove(reloc);
+				iterator.remove();
 				break;
 			default:
 				break;
 			}
 		}
 	}
+	
+	public void doLocalRelocs() {
+		
+	}
+	
 	
 	/***
 	 * Get the combined length of all chunks in this object (in bytes)

@@ -21,6 +21,12 @@ public class InstructionParser {
 		try {
 			return (
 				(ins.substring(0, 3).equals("LDI")) ? parseLDI(parts, ln) : //Parse LDI instruction
+				(ins.substring(0, 3).equals("LDA")) ? parseLDA(parts, ln) : //Parse LDA instruction
+				
+				
+				
+				
+				
 				
 				
 				null
@@ -99,11 +105,11 @@ public class InstructionParser {
 	/***
 	 * Parse an LDI (Load immediate) instruction
 	 * Format: LDI Register ImmediateValue
-	 * Register may be either a number of register alias (ex. r0, sp)
+	 * Register may be either a number or register alias (ex. r0, sp)
 	 * ImmediateValue must be an immediate constant (1-byte, 2-byte, or 3-byte)
 	 * @param line whitespace-delimited input line
 	 * @param ln current line number
-	 * @return the input parsed into an ObjectChunk
+	 * @return the input parsed into a ParsedInstruction
 	 */
 	public static ParsedInstruction parseLDI(String[] line, int ln) throws NumberFormatException {
 		if (line.length < 3) Util.error("Assembler", "Incorrectly formatted LDI instruction", ln);
@@ -112,7 +118,7 @@ public class InstructionParser {
 		if (line[0].length() >= 4 && line[0].charAt(3) != '_' && line[0].charAt(3) != 'U') {
 			al = Integer.parseInt(String.valueOf(line[0].charAt(3)));
 			String op = (al == 1) ? "LDI1" : (al == 2) ? "LDI2" : (al == 3) ? "LDI3" : "ERR";
-			if (op == "ERR") Util.error("Assembler", "LDI cannot load more than 3 bytes", ln);
+			if (op.equals("ERR")) Util.error("Assembler", "LDI cannot load more than 3 bytes", ln);
 			opcode = MachineInfo.opcodes.get(op);
 		} else {
 			al = 1; //default to 1 byte argument
@@ -128,14 +134,34 @@ public class InstructionParser {
 			return new ParsedInstruction(Util.concatArrays(new byte[] {(byte) opcode.intValue()}, regArg, nBytes));
 		} else {
 			String relocOp = (al == 1) ? "CONST1" : (al == 2) ? "CONST2" : (al == 3) ? "CONST3" : "ERR";
-			if (relocOp == "ERR") Util.error("Assembler", "Unknown error creating reloc", ln);
+			if (relocOp.equals("ERR")) Util.error("Assembler", "Unknown error creating reloc", ln);
 			Reloc reloc = new Reloc(2, relocOp, line[2], minN, maxN, ln); //Reloc will start at byte 3
 			byte[] space = new byte[al];
 			return new ParsedInstruction(Util.concatArrays(new byte[] {(byte) opcode.intValue()}, regArg, space), reloc);
 		}
 	}
 	
-	
+	/***
+	 * Parse an LDA (Load address) instruction
+	 * Format: LDA Register Symbol
+	 * Register may be either a number or register alias (ex. r0, sp)
+	 * Symbol may refer to any local symbol (ex. someSymbol), or a global symbol by addressing another file (ex. someFile.someSymbol)
+	 * @param line whitespace-delimited input line
+	 * @param ln current line number
+	 * @return the input parsed into a ParsedInstruction
+	 */
+	public static ParsedInstruction parseLDA(String[] line, int ln) throws NumberFormatException {
+		if (line.length < 3) Util.error("Assembler", "Incorrectly formatted LDA instruction", ln);
+		byte[] regArg = getRegisterArg(getRegister(line[1], ln));
+		boolean isGlobal = line[2].contains(".");
+		if (line[2].contains(".")) { //Parse global reloc
+			Reloc reloc = new Reloc(2, Reloc.LINKGLOBAL, line[2], ln);
+			return new ParsedInstruction(new byte[] {(byte) MachineInfo.opcodes.get("LDI2").intValue(), regArg[0], 0, 0, 0}, reloc);
+		} else { //Parse local reloc
+			Reloc reloc = new Reloc(2, Reloc.LINKLOCAL, line[2], ln);
+			return new ParsedInstruction(new byte[] {(byte) MachineInfo.opcodes.get("LDI3").intValue(), regArg[0], 0, 0}, reloc);
+		}
+	}
 	
 	
 	

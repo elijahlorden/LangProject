@@ -17,3 +17,5 @@ const2: ._const 257
 main:
 ldi $r0 const1
 ldi3 $r1 const2
+lda $r2 block
+lda $r3 otherFile.otherSymbol

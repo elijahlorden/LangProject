@@ -34,7 +34,7 @@ public class Main extends Application {
 		stage.setScene(DebuggerWindow.newDebuggerWindow(obj));
 		
 		
-		
+		stage.setResizable(false);
 		stage.show();
 	}
 

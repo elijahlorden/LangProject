@@ -12,11 +12,11 @@ public class Reloc {
 	private String operation;
 	/*
 	 * Reloc operations:
-	 * LINKLOCAL	- link to local symbol
+	 * LINKLOCAL	- link to local symbol (2-byte IP-relative address)
 	 * CONST1		- replace with 1-byte local constant
 	 * CONST2		- replace with 2-byte local constant
 	 * CONST3		- replace with 3-byte local constant
-	 * LINKGLOBAL	- link to global symbol
+	 * LINKGLOBAL	- link to global symbol (3-byte Absolute address)
 	 */
 	private String symbol;
 	private Integer max;
@@ -27,8 +27,6 @@ public class Reloc {
 		this.address = address;
 		this.operation = operation;
 		this.symbol = symbol;
-		this.max = Integer.MAX_VALUE;
-		this.min = Integer.MIN_VALUE;
 		this.ln = ln;
 	}
 	

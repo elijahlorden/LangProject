@@ -51,6 +51,7 @@ public class HexDebugger extends GridPane {
 		
 		gridLabels = new HexLabel[data.length];
 		this.setMinHeight(600);
+		
 		int x = 0;
 		int y = 0;
 		
@@ -58,6 +59,11 @@ public class HexDebugger extends GridPane {
 			gridLabels[i] = newLabel(data[i], getLabelAt(i));
 			this.add(gridLabels[i], x, y);
 			if (x >= 35) { x = 0; y++; } else x++;
+		}
+		
+		for (int i=0; i<y; i++) {
+			Label label = new Label(" ");
+			this.add(label, 36, i);
 		}
 		
 		this.setHgap(1);

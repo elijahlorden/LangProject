@@ -6,6 +6,7 @@ import assembler.containers.DebugLabel;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
@@ -62,15 +63,21 @@ public class DebuggerWindow {
 			}
 		};
 		
+		
 		ScrollPane hexPane = new ScrollPane();
+		hexPane.setHbarPolicy(ScrollBarPolicy.NEVER);
 		hexPane.setContent(debugger);
-		hexPane.setPrefSize(512, 600);
+		//hexPane.setPrefSize(526, 600);
+		hexPane.setMinHeight(600);
 		hexPane.setStyle("-fx-border-width: 0px; -fx-border-style: none; -fx-border-insets: 0; -fx-background-color: #000000;");
+		
+		
 		vBox.getChildren().add(hexPane);
 		
 		
 		
 		Scene scene = new Scene(vBox);
+		
 		return scene;
 	}
 	
