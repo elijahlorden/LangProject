@@ -67,7 +67,42 @@ public class ASMObject {
 			addDebugLabels(c.getDebugLabels(), compilePointer); //Translate and add the debug labels to the object
 			compilePointer += c.length(); //Set the next address to the byte after the chunk
 		}
-		
+	}
+	
+	/***
+	 * Perform all constant relocs
+	 * This method will execute any 'CONST#' relocs and remove them from the reloc list
+	 * This must be done after compile and before the object is passed to the static linker
+	 */
+	public void doConstRelocs() {
+		for (Reloc reloc : compiledRelocs) {
+			byte[] constArray = constants.get(reloc.getSymbol());
+			switch(reloc.getOperation()) {
+			case Reloc.CONST1:
+				if (constArray == null) Util.error("Assembler", "Constant '" + reloc.getSymbol() + "' does not exist");
+				if (constArray.length > 1) Util.warn("Assembler", "Constant '" + reloc.getSymbol() + "' is of incorrect width for statement on line " + reloc.getLn() + " (The constant value will be truncated)");
+				compiledObject[reloc.getAddress()] = constArray[0];
+				compiledRelocs.remove(reloc);
+				break;
+			case Reloc.CONST2:
+				if (constArray == null) Util.error("Assembler", "Constant '" + reloc.getSymbol() + "' does not exist");
+				if (constArray.length > 2) Util.warn("Assembler", "Constant '" + reloc.getSymbol() + "' is of incorrect width for statement on line " + reloc.getLn() + " (The constant value will be truncated)");
+				compiledObject[reloc.getAddress()] = constArray[0];
+				compiledObject[reloc.getAddress()+1] = (constArray.length >= 2) ? constArray[1] : (byte) 0;
+				compiledRelocs.remove(reloc);
+				break;
+			case Reloc.CONST3:
+				if (constArray == null) Util.error("Assembler", "Constant '" + reloc.getSymbol() + "' does not exist");
+				if (constArray.length > 3) Util.warn("Assembler", "Constant '" + reloc.getSymbol() + "' is of incorrect width for statement on line " + reloc.getLn() + " (The constant value will be truncated) BIT-WIDTHS OVER 24 ARE NOT SUPPORTED");
+				compiledObject[reloc.getAddress()] = constArray[0];
+				compiledObject[reloc.getAddress()+1] = (constArray.length >= 2) ? constArray[1] : (byte) 0;
+				compiledObject[reloc.getAddress()+2] = (constArray.length >= 3) ? constArray[2] : (byte) 0;
+				compiledRelocs.remove(reloc);
+				break;
+			default:
+				break;
+			}
+		}
 	}
 	
 	/***

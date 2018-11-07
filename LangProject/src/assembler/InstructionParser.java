@@ -20,7 +20,7 @@ public class InstructionParser {
 		String ins = parts[0].toUpperCase();
 		try {
 			return (
-				(ins.substring(0, 3).equals("LDI")) ? parseLDI(parts, ln) :
+				(ins.substring(0, 3).equals("LDI")) ? parseLDI(parts, ln) : //Parse LDI instruction
 				
 				
 				null
@@ -129,7 +129,7 @@ public class InstructionParser {
 		} else {
 			String relocOp = (al == 1) ? "CONST1" : (al == 2) ? "CONST2" : (al == 3) ? "CONST3" : "ERR";
 			if (relocOp == "ERR") Util.error("Assembler", "Unknown error creating reloc", ln);
-			Reloc reloc = new Reloc(2, relocOp, line[2], minN, maxN); //Reloc will start at byte 3
+			Reloc reloc = new Reloc(2, relocOp, line[2], minN, maxN, ln); //Reloc will start at byte 3
 			byte[] space = new byte[al];
 			return new ParsedInstruction(Util.concatArrays(new byte[] {(byte) opcode.intValue()}, regArg, space), reloc);
 		}

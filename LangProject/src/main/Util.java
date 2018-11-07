@@ -34,12 +34,21 @@ public class Util {
 	}
 	
 	/**
+	 * Prints a warning message (concatenation of s1 + s2)
+	 * @param s1
+	 * @param s2
+	 */
+	public static void warn(String s1, String s2) {
+		System.out.println("[" + s1 + " WARNING] " + s2);
+	}
+	
+	/**
 	 * Prints an error message (concatenation of s1 + s2) and exits the program
 	 * @param s1
 	 * @param s2
 	 */
 	public static void error(String s1, String s2) {
-		System.out.println("[" + s1 + "] " + s2);
+		System.out.println("[" + s1 + " ERROR] " + s2);
 		Scanner s = new Scanner(System.in);
 		s.nextByte();
 		s.close();
@@ -52,7 +61,7 @@ public class Util {
 	 * @param s2
 	 */
 	public static void error(String s1,String s2, int line) {
-		System.out.println("[" + s1 + "] (line "+ line + ") " + s2);
+		System.out.println("[" + s1 + " ERROR] (line "+ line + ") " + s2);
 		Scanner s = new Scanner(System.in);
 		s.nextByte();
 		s.close();

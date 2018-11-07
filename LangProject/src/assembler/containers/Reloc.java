@@ -2,6 +2,12 @@ package assembler.containers;
 
 public class Reloc {
 	
+	public static final String LINKLOCAL = "LINKLOCAL";
+	public static final String CONST1 = "CONST1";
+	public static final String CONST2 = "CONST2";
+	public static final String CONST3 = "CONST3";
+	public static final String LINKGLOBAL = "LINKGLOBAL";
+	
 	private int address;
 	private String operation;
 	/*
@@ -15,25 +21,32 @@ public class Reloc {
 	private String symbol;
 	private Integer max;
 	private Integer min;
+	private Integer ln;
 	
-	public Reloc(int address, String operation, String symbol) {
+	public Reloc(int address, String operation, String symbol, int ln) {
 		this.address = address;
 		this.operation = operation;
 		this.symbol = symbol;
 		this.max = Integer.MAX_VALUE;
 		this.min = Integer.MIN_VALUE;
+		this.ln = ln;
 	}
 	
-	public Reloc(int address, String operation, String symbol, int min, int max) {
+	public Reloc(int address, String operation, String symbol, int min, int max, int ln) {
 		this.address = address;
 		this.operation = operation;
 		this.symbol = symbol;
 		this.max = max;
 		this.min = min;
+		this.ln = ln;
 	}
 
 	public int getAddress() {
 		return address;
+	}
+	
+	public int getLn() {
+		return ln;
 	}
 	
 	public void setAddress(int address) {

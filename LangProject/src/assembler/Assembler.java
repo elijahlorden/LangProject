@@ -43,6 +43,9 @@ public class Assembler {
 		log("Start Compile");
 		obj.compile();
 		log("Compile completed");
+		log("Linking constants");
+		obj.doConstRelocs();
+		log("Finished linking constants");
 	}
 	
 	 /***
@@ -63,12 +66,6 @@ public class Assembler {
 					break;
 				case ".text":
 					section = 2;
-					break;
-				case ".import":
-					section = 3;
-					break;
-				case ".export":
-					section = 4;
 					break;
 				default:
 					switch(section) {
@@ -141,9 +138,9 @@ public class Assembler {
 			ds = ds.substring(0, ds.length()-1);
 		}
 		if (type.equals("const")) {
-			obj.addConstant(parts[1].substring(0, parts[1].length()-1), DataParser.parseConst(parts[2], false, ln), ln); //Signed constant
+			obj.addConstant(key, DataParser.parseConst(parts[2], false, ln), ln); //Signed constant
 		} else if (type.equals("_const")) {
-			obj.addConstant(parts[1].substring(0, parts[1].length()-1), DataParser.parseConst(parts[2], true, ln), ln); //Unsigned constant
+			obj.addConstant(key, DataParser.parseConst(parts[2], true, ln), ln); //Unsigned constant
 		} else {
 			byte[] data = DataParser.translateData(ds, type, ln);
 			ObjectChunk dataChunk = new ObjectChunk(key, data);

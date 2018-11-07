@@ -8,12 +8,12 @@ charArray: .byte 'H','e','l','l','o'
 byteArray: .byte 1,2,3,4,5
 block: .block 16 #allocate 16 bytes initialized to 0
 
-const1: .const 1234567 #constants are assigned a data width by the assembler
+const1: ._const 32
+const2: ._const 257
 
 .text #code
 
 #main is the entrypoint
 main:
 ldi $r0 const1
-ldi $r1 const1
-
+ldi3 $r1 const2
