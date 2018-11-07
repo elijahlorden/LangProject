@@ -42,7 +42,7 @@ public class MachineInfo {
 			put("LDI1", 1); //Load Immediate (1-byte)
 			put("LDI2", 2); //Load Immediate (2-byte)
 			put("LDI3", 3); //Load Immediate (3-byte) (also used for LDA)
-			
+			put("MOV", 4); //Register transfer
 	}};
 
 }

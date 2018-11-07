@@ -60,7 +60,7 @@ public class HexDebugger extends GridPane {
 			this.add(gridLabels[i], x, y);
 			if (x >= 35) { x = 0; y++; } else x++;
 		}
-		
+		//Add padding to prevent scrollbar from overlapping last column
 		for (int i=0; i<y; i++) {
 			Label label = new Label(" ");
 			this.add(label, 36, i);

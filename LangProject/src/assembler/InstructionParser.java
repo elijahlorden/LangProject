@@ -22,7 +22,7 @@ public class InstructionParser {
 			return (
 				(ins.substring(0, 3).equals("LDI")) ? parseLDI(parts, ln) : //Parse LDI instruction
 				(ins.substring(0, 3).equals("LDA")) ? parseLDA(parts, ln) : //Parse LDA instruction
-				
+				(ins.substring(0, 3).equals("MOV")) ? parseMOV(parts, ln) : //Parse MOV instruction
 				
 				
 				
@@ -144,7 +144,7 @@ public class InstructionParser {
 	/***
 	 * Parse an LDA (Load address) instruction
 	 * Format: LDA Register Symbol
-	 * Register may be either a number or register alias (ex. r0, sp)
+	 * Register may be either a number or register alias (ex. $r0, $sp)
 	 * Symbol may refer to any local symbol (ex. someSymbol), or a global symbol by addressing another file (ex. someFile.someSymbol)
 	 * @param line whitespace-delimited input line
 	 * @param ln current line number
@@ -163,7 +163,20 @@ public class InstructionParser {
 		}
 	}
 	
-	
+	/***
+	 * Parse a MOV (register transfer) instruction
+	 * Format: MOV srcReg destReg
+	 * Arguments may be either numbers or register aliases (ex. $r1, $ip)
+	 * @param line whitespace-delimited input line
+	 * @param ln current line number
+	 * @return the input parsed into a ParsedInstruction
+	 * @throws NumberFormatException
+	 */
+	public static ParsedInstruction parseMOV(String[] line, int ln) throws NumberFormatException {
+		if (line.length < 3) Util.error("Assembler", "Incorrectly formatted LDA instruction", ln);
+		byte[] regArg = getRegisterArg(getRegister(line[1], ln), getRegister(line[2], ln));
+		return new ParsedInstruction(new byte[] {(byte)MachineInfo.opcodes.get("MOV").intValue(), regArg[0]});
+	}
 	
 	
 	

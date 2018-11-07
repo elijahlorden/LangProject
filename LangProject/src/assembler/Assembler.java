@@ -43,9 +43,10 @@ public class Assembler {
 		log("Start Compile");
 		obj.compile();
 		log("Compile completed");
-		log("Linking constants");
+		log("Linking local symbols and constants");
 		obj.doConstRelocs();
-		log("Finished linking constants");
+		obj.doLocalRelocs();
+		log("Finished linking local symbols and constants");
 	}
 	
 	 /***
@@ -146,9 +147,6 @@ public class Assembler {
 			ObjectChunk dataChunk = new ObjectChunk(key, data);
 			dataChunk.addDebugLabel(new DebugLabel(0, data.length, key, filename, DebugType.Data, ln, line));
 			obj.addChunk(dataChunk);
-			
-			
-			
 		}
 	}
 	
@@ -170,8 +168,6 @@ public class Assembler {
 			DebugLabel label = new DebugLabel(0, ins.getChunk().length, currentTextLabel, filename, DebugType.Text, ln, line);
 			if (ins.getReloc() != null) label.setReloc(ins.getReloc());
 			currentTextChunk.addParsedInstruction(ins, label);
-			
-			
 		} else {
 			Util.error("Assembler", "Unknown instruction", ln);
 		}
