@@ -8,6 +8,8 @@ import main.Util;
 
 public class ASMObject {
 	
+	private String name;
+	
 	private ArrayList<ObjectChunk> chunks;
 	private byte[] compiledObject;
 	private ArrayList<Reloc> compiledRelocs;
@@ -19,12 +21,13 @@ public class ASMObject {
 	
 	private int compilePointer;
 	
-	public ASMObject() {
+	public ASMObject(String name) {
 		this.chunks = new ArrayList<ObjectChunk>();
 		this.constants = new HashMap<String, byte[]>();
 		this.symbolLocs = new HashMap<String, Integer>();
 		this.debugLabels = new ArrayList<DebugLabel>();
 		this.compiledRelocs = new ArrayList<Reloc>();
+		this.name = name;
 	}
 	
 	/***
@@ -175,6 +178,14 @@ public class ASMObject {
 			r.setAddress(r.getAddress() + compilePointer);
 			compiledRelocs.add(r);
 		}
+	}
+	
+	/***
+	 * Get the name associated with this object
+	 * @return the name associated with the object
+	 */
+	public String getName() {
+		return name;
 	}
 	
 }

@@ -1,5 +1,6 @@
 package assembler;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -28,8 +29,9 @@ public class Assembler {
 		} catch (IOException e) {
 			Util.error("Assembler", "Could not read file " + filename);
 		}
-		this.filename = filename;
-		this.obj = new ASMObject();
+		this.filename = (new File(filename)).getName();
+		String objName = this.filename.contains(".") ? this.filename.substring(0, this.filename.indexOf('.')) : this.filename;
+		this.obj = new ASMObject(objName);
 	}
 	
 	private void log(String s) {
