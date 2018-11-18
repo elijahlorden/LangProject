@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import assembler.DataParser;
 import main.Util;
 
 public class ASMObject {
@@ -69,9 +70,9 @@ public class ASMObject {
 	}
 	
 	/***
-	 * Perform all constant relocs
-	 * This method will execute any 'CONST#' relocs and remove them from the reloc list
-	 * This must be done after compile and before the object is passed to the static linker
+	 * Perform all 'CONST*' relocs
+	 * This method will execute any 'CONST*' relocs and remove them from the reloc list
+	 * This must be done after compile and before the object is passed to the global linker
 	 */
 	public void doConstRelocs() {
 		for (Iterator<Reloc> iterator = compiledRelocs.iterator(); iterator.hasNext();) { //Use an iterator to allow for removing relocs while iterating
@@ -105,8 +106,26 @@ public class ASMObject {
 		}
 	}
 	
+	/***
+	 * Perform all 'LINKLOCAL' relocs
+	 * This will execute any 'LINKLOCAL' relocs and remove them from the reloc list
+	 * This must be done after compile and before the object is passed to the global linker
+	 * All 'LINKLOCAL' relocs use two-byte IP-relative addresses
+	 */
 	public void doLocalRelocs() {
-		
+		for (Iterator<Reloc> iterator = compiledRelocs.iterator(); iterator.hasNext();) {
+			Reloc reloc = iterator.next();
+			if (reloc.getOperation().equals(Reloc.LINKLOCAL)) {
+				int endOfAddress = reloc.getAddress() + 2; //All 'LINKLOCAL' addresses are 2 bytes long (space MUST be pre-allocated for this value, otherwise it will overwrite data)
+				Integer symbolAddress = symbolLocs.get(reloc.getSymbol());
+				if (symbolAddress == null) Util.error("Linker (local)", "Could not resolve local symbol '" + reloc.getSymbol() + "'");
+				Integer relativeAddress = symbolAddress - endOfAddress; //IP-relative address
+				byte[] compiledRelativeAddress = (relativeAddress > 0) ? DataParser.parseWord(relativeAddress.toString(), 0, false) : DataParser.parseWord(relativeAddress.toString(), 0, true);
+				compiledObject[reloc.getAddress()] = compiledRelativeAddress[0];
+				compiledObject[reloc.getAddress()+1] = compiledRelativeAddress[1];
+				iterator.remove();
+			}
+		}
 	}
 	
 	

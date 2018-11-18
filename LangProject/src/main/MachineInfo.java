@@ -10,7 +10,7 @@ public class MachineInfo {
 	/***
 	 * List legal register aliases
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("serial")
 	public static HashMap<String, Integer> registerAliases = new HashMap<String, Integer>() {{
 			put("r0", 0); //r0 - r7 (Registers 0 - 7) are general purpose registers (nonvolatile)
 			put("r1", 1);
@@ -36,13 +36,16 @@ public class MachineInfo {
 	/***
 	 * List of legal opcodes
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("serial")
 	public static final Map<String, Integer> opcodes = new HashMap<String, Integer>() {{
 			put("NOP", 0); //No operation
 			put("LDI1", 1); //Load Immediate (1-byte)
 			put("LDI2", 2); //Load Immediate (2-byte)
-			put("LDI3", 3); //Load Immediate (3-byte) (also used for LDA)
-			put("MOV", 4); //Register transfer
+			put("LDI3", 3); //Load Immediate (3-byte)
+			put("LDI1R", 4); //Load IP + Immediate (1-byte)
+			put("LDI2R", 5); //Load IP + Immediate (2-byte)
+			put("LDI3R", 6); //Load IP + Immediate (3-byte)
+			put("MOV", 7); //Register transfer
 	}};
 
 }

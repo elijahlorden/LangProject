@@ -156,10 +156,10 @@ public class InstructionParser {
 		boolean isGlobal = line[2].contains(".");
 		if (line[2].contains(".")) { //Parse global reloc
 			Reloc reloc = new Reloc(2, Reloc.LINKGLOBAL, line[2], ln);
-			return new ParsedInstruction(new byte[] {(byte) MachineInfo.opcodes.get("LDI2").intValue(), regArg[0], 0, 0, 0}, reloc);
+			return new ParsedInstruction(new byte[] {(byte) MachineInfo.opcodes.get("LDI3").intValue(), regArg[0], 0, 0, 0}, reloc);
 		} else { //Parse local reloc
 			Reloc reloc = new Reloc(2, Reloc.LINKLOCAL, line[2], ln);
-			return new ParsedInstruction(new byte[] {(byte) MachineInfo.opcodes.get("LDI3").intValue(), regArg[0], 0, 0}, reloc);
+			return new ParsedInstruction(new byte[] {(byte) MachineInfo.opcodes.get("LDI2R").intValue(), regArg[0], 0, 0}, reloc);
 		}
 	}
 	

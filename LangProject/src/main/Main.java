@@ -27,9 +27,13 @@ public class Main extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 		
-		ProjectBuilder.build("source");
+		Assembler asm = new Assembler("source/Program.asm");
+		asm.parse();
+		asm.compile();
 		
-		//stage.setScene(DebuggerWindow.newDebuggerWindow(obj));
+		//ProjectBuilder.build("source");
+		
+		stage.setScene(DebuggerWindow.newDebuggerWindow(asm.getObject()));
 		
 		
 		stage.setResizable(false);
